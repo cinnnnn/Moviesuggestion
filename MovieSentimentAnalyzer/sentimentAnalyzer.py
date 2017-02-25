@@ -3,7 +3,7 @@ from keras.preprocessing import sequence
 from keras.models import load_model
 
 # load the dataset but only keep the top n words, zero the rest
-top_words = 5000
+top_words = 20000
 (X_train, y_train), (X_test, y_test) = imdb.load_data(nb_words=top_words)
 
 # truncate and pad input sequences

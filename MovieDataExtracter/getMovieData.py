@@ -1,16 +1,32 @@
 # This is the movie list path
 import urllib.request
-
+import pymysql
 import json
-import csv
+from time import sleep
 
-path = 'movielist.csv'
-#path = '/media/chana/Data/Level4/git/Moviesuggestion/MovieDataExtracter/movielist.csv'
+
+cnx = pymysql.connect(host='localhost', user='root', password='123', db='movia',
+                      charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor)
+
+cursor = cnx.cursor()
+
+
+
+
+getMovieQuery = ("SELECT * FROM tbl_movie WHERE imdb_id = %s")
+saveMovieQuery = ("INSERT INTO `tbl_movie` (`title`, `imdb_id`, `country`, `actors`, `year`, "
+                  "`plot`, `poster_url`, `genre`, `language`, `runtime`, `writer`, `director`) "
+                  "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
+
+saveMovieProfileQuery = ("INSERT INTO `tbl_movie_profile` (`imdb_id`, `imdb_rating`) "
+                  "VALUES (%s, %s)")
+
+
+getMovieProfileQuery = ("SELECT * FROM tbl_movie_profile WHERE imdb_id = %s")
+path = 'links.csv'
 
 # Open movielist.csv file
 data = open(path,'r')
-plot = "full"
-type = "json"
 
 hasData = True
 
@@ -21,35 +37,115 @@ while hasData:
     if movieData and not movieData.isspace():
         movieData = movieData.split(',')
 
-        movieTitle = movieData[0]
-        movieYear = movieData[1]
+        movieImdbId = movieData[1]
+        movieImdbId = "tt"+ movieImdbId
+        print(movieImdbId)
 
-        movieTitle = movieTitle.replace(" ", "+")
+        cursor.execute(getMovieQuery,movieImdbId)
 
+        rows = cursor.fetchall()
+        print('Total Row(s):', cursor.rowcount)
 
-        print(movieTitle)
-        try:
+        # for (title, genre, plot) in cursor:
+        #     print("%s  belongs to %s genres and plot is %s".format(title, genre, plot))
+
+        # movieTitle = movieTitle.replace(" ", "+")
+
+        if(cursor.rowcount<1):
+            try:
                 # send rerquest to OMDB api and get movie info
-            # movieInfo = urllib.request.urlopen("http://www.omdbapi.com/?t=%s&y=&plot=full&r=json" %
-            #                                    movieTitle).read().decode("utf-8")
-            # movieJson = json.loads(movieInfo)
-            with open('../Data/movieData.csv', 'w') as csvfile:
-                fieldnames = ['first_name', 'last_name']
-                writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+                # movieInfo = urllib.request.urlopen("http://www.omdbapi.com/?t=%s&y=&plot=full&r=json" %
+                #                                    movieTitle).read().decode("utf-8")
 
-                writer.writeheader()
-                writer.writerow({'first_name': 'Baked', 'last_name': 'Beans'})
-                writer.writerow({'first_name': 'Lovely', 'last_name': 'Spam'})
-                writer.writerow({'first_name': 'Wonderful', 'last_name': 'Spam'})
-            # print(movieJson)
-        except ValueError:
-            print("Oops! That is an invalid Movie")
 
-    #     Write extracted movie info to a file or send to a database
+                try:
+                    movieInfo = urllib.request.urlopen(
+                    "http://www.omdbapi.com/?i=%s&plot=full&r=json" % movieImdbId).read().decode("utf-8")
+                except ValueError:
+                    sleep(10)
+                    try:
+                        movieInfo = urllib.request.urlopen(
+                            "http://www.omdbapi.com/?i=%s&plot=full&r=json" % movieImdbId).read().decode("utf-8")
+                    except ValueError:
+                        sleep(20)
+                        try:
+                            movieInfo = urllib.request.urlopen(
+                                "http://www.omdbapi.com/?i=%s&plot=full&r=json" % movieImdbId).read().decode("utf-8")
+                        except ValueError:
+                            sleep(30)
+                            try:
+                                movieInfo = urllib.request.urlopen(
+                                    "http://www.omdbapi.com/?i=%s&plot=full&r=json" % movieImdbId).read().decode(
+                                    "utf-8")
+                            except ValueError:
+                                sleep(60)
+                                try:
+                                    movieInfo = urllib.request.urlopen(
+                                        "http://www.omdbapi.com/?i=%s&plot=full&r=json" % movieImdbId).read().decode(
+                                        "utf-8")
+                                except ValueError:
+                                    sleep(180)
+                                    movieInfo = urllib.request.urlopen(
+                                        "http://www.omdbapi.com/?i=%s&plot=full&r=json" % movieImdbId).read().decode(
+                                        "utf-8")
 
+
+
+                movieJson = json.loads(movieInfo)
+                print(movieJson)
+                if(movieJson['Runtime']== 'N/A'):
+                    movieJson['Runtime'] = 0
+
+
+                returnedMovieData = (movieJson['Title'],movieJson['imdbID'],movieJson['Country'],
+                                     movieJson['Actors'],movieJson['Year'],movieJson['Plot'],
+                                     movieJson['Poster'],movieJson['Genre'],movieJson['Language'],
+                                     movieJson['Runtime'],movieJson['Writer'],movieJson['Director'],)
+
+
+                # Insert new movie
+                cursor.execute(saveMovieQuery, returnedMovieData)
+                cnx.commit()
+
+
+            except ValueError:
+                print("Oops! That is an invalid Movie")
+
+        cursor.execute(getMovieProfileQuery, movieImdbId)
+        rows = cursor.fetchall()
+
+        if (cursor.rowcount < 1):
+
+            try:
+
+                try:
+                    movieInfo = urllib.request.urlopen(
+                    "http://www.omdbapi.com/?i=%s&plot=full&r=json" % movieImdbId).read().decode("utf-8")
+                except ValueError:
+                    sleep(10)
+                    try:
+                        movieInfo = urllib.request.urlopen(
+                            "http://www.omdbapi.com/?i=%s&plot=full&r=json" % movieImdbId).read().decode("utf-8")
+                    except ValueError:
+                        sleep(20)
+                        movieInfo = urllib.request.urlopen(
+                            "http://www.omdbapi.com/?i=%s&plot=full&r=json" % movieImdbId).read().decode("utf-8")
+
+
+                movieJson = json.loads(movieInfo)
+                print(movieJson)
+                imdbRating = movieJson['imdbRating']
+                cursor.execute(saveMovieProfileQuery, (movieImdbId, imdbRating))
+                cnx.commit()
+
+            except ValueError:
+                print("data insertion failed")
 
 
 
     else:
         hasData = False
 
+
+cursor.close()
+cnx.close()
