@@ -1,0 +1,17 @@
+\chapter{Conclusion}
+\noindent Pour effectuer l'analyse des catégories, il a fallu passer par plusieurs étapes : \\
+
+\begin{itemize}
+\item Récupérer les descriptions des films
+\item Analyser le contenu, supprimer les stopwords, compter les occurrences des mots
+\item Créer une matrice des caractéristiques en calculant le score "tf-idf" sur chaque mot
+\item Créer une matrice de distance avec une distance "cosinus"
+\item Paramétriser l'algorithme de reconnaissance
+\item Effectuer le clustering hiérarchique ainsi que la carte de Kohonen pour vérifier les résultats de l'analyse\\
+\end{itemize}
+
+Les résultats de l'analyse ont été très intéressants. D'abord nous avons pu voir qu’on peut effectivement définir si deux films sont similaires et appartiennent à la même catégorie. Cela était possible seulement une fois avoir récupéré des descriptifs plus longs des films ainsi qu'avec l'optimisation de l'extraction des caractéristiques en utilisant la méthode "tf-idf". Grâce à la création de la matrice de distance entre les films et du clustering hiérarchique, nous avons pu vérifier que l'algorithme fonctionnait correctement. Nous avons démontré cela en faisant un comparatif entre les catégories trouvées et les catégories connues qui provenaient de la liste des films. Nous avons finalement généré une carte de Kohonen pour avoir une vision plus complète sur l'ensemble de notre dataset et nous avons pu constater que des groupes de films similaires ont été formés. 
+ 
+Nous avons pu voir également que des erreurs et des imprécisions sont encore présentes. La cause prédominante est que l'algorithme se base uniquement sur la description des films et pas sur d'autres informations qui peuvent également être intéressantes (voir section \ref{plus-informations} pour plus de détails). 
+ 
+D'un point de vue plus personnel, nous avons trouvé ce projet très intéressant pour mettre en pratique la théorie vue au cours, mais aussi pour l'expérience faite avec un cas réellement utilisable basé sur des données trouvées en ligne. Nous sommes finalement contents des résultats obtenus même si, avec plus de temps, des améliorations pourraient être très intéressantes à explorer.
