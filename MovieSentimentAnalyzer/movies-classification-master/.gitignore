@@ -1,0 +1,10 @@
+*.aux
+*.log
+*.out
+*.toc
+*.pdf
+*.tex.backup
+*.pyc
+code/data3/data3393.json
+code/data4/data3393.json
+code/data5/data3393.json

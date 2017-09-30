@@ -1,0 +1,90 @@
+\documentclass[a4paper, 12pt]{report}
+
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+%\usepackage[english]{babel}
+\usepackage[T1]{fontenc}
+% \usepackage[latin1]{inputenc}
+
+\usepackage[top=3cm, bottom=3cm, left=2.3cm,right=2cm]{geometry}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{titlepic}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage[table]{xcolor}
+\definecolor{light-gray}{gray}{0.50}
+\definecolor{very-light-gray}{gray}{0.9}
+
+\usepackage{listings}
+\lstset{language=python, 
+  basicstyle=\scriptsize, 
+  numbers=left,
+  numberstyle=\tiny\color{light-gray},  % the style that is used for the line-numbers
+  numbersep=5pt,                  % how far the line-numbers are from the code
+  backgroundcolor=\color{white},      % choose the background color. You must add \usepackage{color}
+  showspaces=false,               % show spaces adding particular underscores
+  showstringspaces=false,         % underline spaces within strings
+  showtabs=false,                 % show tabs within strings adding particular underscores
+  frame=single,                   % adds a frame around the code
+  %rulecolor=\color{black},        % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. commens (green here))
+  tabsize=4,                      % sets default tabsize to 2 spaces
+  captionpos=b,                   % sets the caption-position to bottom
+  breaklines=true,                % sets automatic line breaking
+  breakatwhitespace=false,        % sets if automatic breaks should only happen at whitespace
+  title=\lstname,                   % show the filename of files included with \lstinputlisting;
+                                  % also try caption instead of title
+  %keywordstyle=\color{blue},          % keyword style
+  commentstyle=\color{light-gray},       % comment style
+  %stringstyle=\color{yellow}         % string literal style
+}
+
+%en-tete de page
+\usepackage{fancyhdr}
+\lhead{MLBD}
+\chead{Casas \& Cogno}
+\rhead{\today}
+\pagestyle{fancy}
+
+%\renewcommand{\thesection}{\arabic{section}} % pour numerotation des sections
+
+\titlepic{\includegraphics[width=0.5\textwidth]{img/mse_logo.jpg}}
+\title{\huge{HES-SO Master} \\ \Huge{\textbf{\textsc{MLBD}}} \\
+\LARGE{Machine Learning on Big Data} \\
+\vspace{2cm} \huge{\textbf{Projet}} \\ 
+\huge{Catégorisation de films}}
+\author{\\ \\ Simone \textsc{Cogno} \& Jacky \textsc{Casas} \\
+\\ \\
+Professeurs : Carlos \textsc{Pena} \& Andres \textsc{Perez-Uribe} \\
+Assistant : Julien \textsc{Rebetez}}
+\date{\today}
+
+
+\begin{document}
+\maketitle % page de garde
+\newpage
+\tableofcontents
+%\newpage
+
+\input{chapter/introduction.tex}
+\input{chapter/demarche.tex}
+\input{chapter/resultats.tex}
+\input{chapter/ameliorations.tex}
+\input{chapter/conclusion.tex}
+
+
+\vspace{1cm}
+Fribourg, le \today
+
+\vspace{0.2cm}
+
+\hspace{2cm} Simone \textsc{Cogno} \hspace{5cm} Jacky \textsc{Casas}
+
+\vspace{2cm}
+
+%\newpage
+
+%\appendix % annexes
+%\input{chapter/annexe.tex}
+
+\end{document}
